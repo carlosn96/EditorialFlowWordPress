@@ -179,6 +179,12 @@ elementos antes de pasar al paso 3. No se inventa nada: usa solo lo que esta en
 - **Enlaces externos siameses**: los datos clave (cifras, verificaciones,
   nombres propios) se citan con su fuente enlazada inline con
   `[texto](https://...url...)`.
+- **Anclaje comercial (opcional)**: si el perfil de marca define `commerce`
+  (p. ej. `brands/<slug>/site.json`) y hay un **libro/producto real y pertinente**,
+  incluye un enlace natural a su ficha como recurso de profundización. **No es
+  obligatorio en todas las entradas**: solo cuando el tema lo permite y el enlace
+  fluye (nunca antes del contenido de valor; sin venta agresiva). No inventes
+  productos ni URLs.
 
 El script `build_wp_entry.py` respalda esto de forma automatica y determinista:
 - **Auto-embeds**: convierte en `<iframe>` las URLs de YouTube que esten **solas

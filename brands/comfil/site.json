@@ -1,5 +1,16 @@
 {
   "internal_domains": ["comfil-local.local", "comfil.edu.mx"],
   "author": "COMFIL",
-  "default_schema_article_type": "Article"
+  "default_schema_article_type": "Article",
+  "commerce": {
+    "store_name": "Librería San Pablo",
+    "store_url": "https://sanpablo.com.mx",
+    "book_cta": true,
+    "cta_note": "Cuando el tema lo permita, enlazar un libro REAL de la tienda como recurso de profundizacion (titulo + URL de ficha verificada). NO es obligatorio en todas las entradas: se incluye solo si hay un libro pertinente y el enlace fluye con naturalidad (sin venta agresiva; maximo uno).",
+    "collections": [
+      "https://sanpablo.com.mx/categoria/filosofia/",
+      "https://sanpablo.com.mx/categoria/promocion-humana/",
+      "https://sanpablo.com.mx/categoria/magisterio/enciclicas-y-documentos/"
+    ]
+  }
 }
