@@ -31,6 +31,13 @@ import build_wp_entry as be  # reusa la logica de conversion
 SKIP_DIRS = {"entradas", "scripts", "reunion", ".agents"}
 
 
+def _as_csv(value) -> str:
+    """Normaliza un valor de meta.json a CSV: acepta string o lista."""
+    if isinstance(value, (list, tuple)):
+        return ",".join(str(v) for v in value)
+    return str(value)
+
+
 def find_drafts(root: str):
     found = []
     for name in sorted(os.listdir(root)):
@@ -81,9 +88,9 @@ def main() -> int:
         if meta.get("excerpt"):
             cmd += ["--excerpt", meta["excerpt"]]
         if meta.get("categories"):
-            cmd += ["--categories", meta["categories"]]
+            cmd += ["--categories", _as_csv(meta["categories"])]
         if meta.get("tags"):
-            cmd += ["--tags", meta["tags"]]
+            cmd += ["--tags", _as_csv(meta["tags"])]
         if meta.get("featured_image"):
             cmd += ["--featured-image", meta["featured_image"]]
         if meta.get("status"):
