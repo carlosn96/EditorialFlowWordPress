@@ -109,6 +109,8 @@ def build_ps1(payload: dict, content_file: str, wp: str,
     lines.append(f'$post_date = "{post_date}"')
     lines.append(f'$title = @\'\n{title}\n\'@')
     lines.append(f'$excerpt = @\'\n{excerpt}\n\'@')
+    lines.append('$title = $title -replace \'"\', \'\\"\'')
+    lines.append('$excerpt = $excerpt -replace \'"\', \'\\"\'')
     lines.append(f'$content = Get-Content "{content_file}" -Raw -Encoding UTF8')
     # WP-CLI interpretaria las comillas dobles (") como delimitador y partaria el
     # argumento. Se escapan a \" (WP-CLI las restituye a " al asignar el valor).
@@ -169,6 +171,8 @@ def build_ps1(payload: dict, content_file: str, wp: str,
     lines.append(f'$og_desc = @\'\n{og_desc}\n\'@')
     lines.append(f'$tw_title = @\'\n{tw_title}\n\'@')
     lines.append(f'$tw_desc = @\'\n{tw_desc}\n\'@')
+    for _v in ("seo_title", "metadesc", "focuskw", "bctitle", "og_title", "og_desc", "tw_title", "tw_desc"):
+        lines.append(f'${_v} = ${_v} -replace \'"\', \'\\"\'')
     lines.append('try {')
     lines.append('  & $wp post meta update $id _yoast_wpseo_title $seo_title | Out-Null')
     lines.append('  & $wp post meta update $id _yoast_wpseo_metadesc $metadesc | Out-Null')
