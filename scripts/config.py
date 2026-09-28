@@ -7,7 +7,7 @@ Separa el MOTOR (scripts) del PERFIL de marca/sitio. Un perfil vive en:
 
     brands/<slug>/
         brand.json      # identidad (nombre, full_name, aliases, audiencia)
-        site.json       # internal_domains, author, default_schema_article_type
+        site.json       # internal_domains, author, default_schema_article_type, commerce
         brand-voice.md  # voz/tono de la marca
 
 Orden de resolución del slug:
@@ -80,6 +80,7 @@ def load_config(script_dir: str, brand: str | None = None) -> dict:
         "internal_domains": [],
         "author": "",
         "default_schema_article_type": "Article",
+        "commerce": {},
         "brand_voice": os.path.join(bdir, "brand-voice.md"),
     }
 
@@ -97,7 +98,7 @@ def load_config(script_dir: str, brand: str | None = None) -> dict:
     if os.path.isfile(sj):
         try:
             d = json.load(open(sj, encoding="utf-8"))
-            for k in ("internal_domains", "author", "default_schema_article_type"):
+            for k in ("internal_domains", "author", "default_schema_article_type", "commerce"):
                 if k in d:
                     cfg[k] = d[k]
         except Exception:

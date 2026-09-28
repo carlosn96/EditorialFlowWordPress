@@ -175,6 +175,9 @@ def main() -> int:
     slug = payload.get("post_name", "")
     excerpt = payload.get("post_excerpt", "")
     content = payload.get("post_content", "")
+    post_date = payload.get("post_date", "") or ""
+    if payload.get("post_status") == "future":
+        status = "future"
     cats = payload.get("post_category", []) or []
     tags = payload.get("tags_input", []) or []
     feat = payload.get("featured_image", "")
@@ -253,6 +256,10 @@ def main() -> int:
             upargs = ["post", "update", pid,
                       f"--post_title={title}", f"--post_excerpt={excerpt}",
                       f"--post_content={content}"]
+            if post_date:
+                upargs.append(f"--post_date={post_date}")
+                if status == "future":
+                    upargs.append("--post_status=future")
             if cat_ids:
                 upargs.append(f"--post_category={','.join(cat_ids)}")
             if tags:
@@ -263,6 +270,8 @@ def main() -> int:
             wpargs = ["post", "create", "--post_type=post", f"--post_status={status}",
                       f"--post_title={title}", f"--post_name={slug}",
                       f"--post_excerpt={excerpt}", "--porcelain"]
+            if post_date:
+                wpargs.append(f"--post_date={post_date}")
             if author_arg:
                 wpargs.append(author_arg)
             if cat_ids:

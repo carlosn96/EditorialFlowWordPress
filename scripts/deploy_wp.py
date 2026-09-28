@@ -70,6 +70,7 @@ def build_ps1(payload: dict, content_file: str, wp: str,
     slug = payload.get("post_name", "")
     excerpt = payload.get("post_excerpt", "")
     status = payload.get("post_status", "draft")
+    post_date = payload.get("post_date", "") or ""
     cats = payload.get("post_category", [])
     tags = payload.get("tags_input", [])
     feat = payload.get("featured_image", "")
@@ -105,6 +106,7 @@ def build_ps1(payload: dict, content_file: str, wp: str,
     lines.append('}')
     lines.append(f'$status = "{status}"')
     lines.append(f'$slug = "{slug}"')
+    lines.append(f'$post_date = "{post_date}"')
     lines.append(f'$title = @\'\n{title}\n\'@')
     lines.append(f'$excerpt = @\'\n{excerpt}\n\'@')
     lines.append(f'$content = Get-Content "{content_file}" -Raw -Encoding UTF8')
@@ -128,6 +130,7 @@ def build_ps1(payload: dict, content_file: str, wp: str,
                  '"--post_name=$slug","--post_excerpt=$excerpt",'
                  '"--porcelain")')
     lines.append('if ($aid -match "^\\d+$") { $wpargs += "--post_author=$aid" }')
+    lines.append('if ($post_date) { $wpargs += "--post_date=$post_date" }')
     # Categorias: resolver el ID sin generar errores si ya existen
     # (term list devuelve el ID; si no existe, se crea). Evita que un
     # "term already exists" benigno aborte el script con ErrorActionPreference.

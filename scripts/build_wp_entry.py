@@ -353,6 +353,8 @@ def main() -> int:
                     help="Nombre del autor/organizacion para el schema Article (por defecto: perfil de marca)")
     ap.add_argument("--brand", default=None,
                     help="Slug del perfil de marca (brands/<slug>/); por defecto EDITORIALFLOW_BRAND o el default")
+    ap.add_argument("--schedule", default=None,
+                    help="Fecha de publicacion programada 'YYYY-MM-DD HH:MM:SS'; fija post_status=future")
     ap.add_argument("--extras", action="store_true",
                     help="Ademas de .wp.json y .html, genera .gutenberg.html y .schema.json")
     args = ap.parse_args()
@@ -427,7 +429,8 @@ def main() -> int:
         "post_name": slug,
         "post_content": gut,
         "post_excerpt": excerpt,
-        "post_status": args.status,
+        "post_status": ("future" if args.schedule else args.status),
+        "post_date": (args.schedule or ""),
         "post_category": cats,
         "tags_input": tags,
         "featured_image": args.featured_image,

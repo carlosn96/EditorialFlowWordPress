@@ -93,6 +93,8 @@ def main() -> int:
             cmd += ["--tags", _as_csv(meta["tags"])]
         if meta.get("featured_image"):
             cmd += ["--featured-image", meta["featured_image"]]
+        if meta.get("schedule"):
+            cmd += ["--schedule", _as_csv(meta["schedule"])]
         if meta.get("status"):
             cmd += ["--status", meta["status"]]
         if meta.get("author"):
