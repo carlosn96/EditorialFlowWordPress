@@ -1,0 +1,17 @@
+# Secretos / entorno — NUNCA versionar
+.env
+ssh.txt
+
+# Salidas de trabajo y borradores (viven fuera del repo)
+workspace/
+*.tmp
+/tmp/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# OS
+.DS_Store
+Thumbs.db
