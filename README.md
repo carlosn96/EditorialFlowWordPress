@@ -36,8 +36,19 @@ EditorialFlow/
 - Para producción: acceso SSH al hosting y WP-CLI en el servidor.
 - `paramiko` para `deploy_prod_ssh.py`.
 
-## Uso rápido
+## Instalación
 
+Instala el skill + los perfiles de marca en un proyecto WordPress (idempotente).
+Detalle en [`INSTALL.md`](INSTALL.md).
+
+```powershell
+py scripts/install.py --project-root "C:\ruta\al\proyecto" `
+   --skill-name comfil-draft-entradas --brand comfil
+```
+
+Luego define la marca activa en el `.env` del proyecto: `EDITORIALFLOW_BRAND=comfil`.
+
+## Uso rápido
 ```powershell
 # 1) Construir el artefacto de una entrada
 py scripts/build_wp_entry.py --draft <carpeta>/informacion/borrador.md `
