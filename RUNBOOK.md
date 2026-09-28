@@ -14,7 +14,7 @@ Operaciones y resolución de problemas del desplegador de entradas.
 
 ## 2. Local vs producción
 
-- **Local:** `deploy_wp.py` usa el wrapper `wp.ps1` del proyecto. Crea un post nuevo.
+- **Local:** `deploy_wp.py` usa el comando WP-CLI local (`WP_CLI_COMMAND`, o `wp.ps1` en la raíz). Crea un post nuevo.
 - **Producción:** `deploy_prod_ssh.py` conecta por SSH (paramiko) y ejecuta el `wp` del servidor.
   - Crea por defecto. Para **actualizar sin duplicar**: `--update` (resuelve el post por slug).
   - Fija Yoast completo, incluida `_yoast_wpseo_primary_category` (primera categoría del JSON).
@@ -31,7 +31,7 @@ Operaciones y resolución de problemas del desplegador de entradas.
 
 ## 4. Verificación
 
-- En PowerShell, la salida de `wp.ps1` llega como **array de líneas**: únela con `-join` antes de
+- En PowerShell, la salida del wrapper de WP-CLI (p. ej. `wp.ps1`) llega como **array de líneas**: únela con `-join` antes de
   buscar substrings (`Contains`/`Length` dan falsos negativos).
 - Antes de desplegar, confirma que los **enlaces internos existen** en el entorno destino.
 - La puntuación de Yoast se **recalcula al abrir/guardar** el post; el `linkdex` guardado puede estar viejo.
@@ -48,7 +48,7 @@ Operaciones y resolución de problemas del desplegador de entradas.
 | Síntoma | Causa probable | Fix |
 |---|---|---|
 | "Too many arguments" | valor con espacios sin entrecomillar | entrecomilla; orden posicionales→flags |
-| No conecta a la BD (local) | sitio Local apagado | arranca comfil-local en Local |
+| No conecta a la BD (local) | sitio Local apagado | arranca el sitio local |
 | `post term set` creó términos basura | se pasaron ids numéricos | pasa slugs, en una sola llamada |
 | Tags/categoría desaparecen tras editar | update de contenido sin re-aplicar taxonomía | re-aplica con `post term set` (una llamada) |
 | Embed de X no carga | wrapper de terceros / sin oEmbed | usa oembed de WP o el iframe oficial de X |

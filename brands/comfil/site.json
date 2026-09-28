@@ -1,0 +1,5 @@
+{
+  "internal_domains": ["comfil-local.local", "comfil.edu.mx"],
+  "author": "COMFIL",
+  "default_schema_article_type": "Article"
+}

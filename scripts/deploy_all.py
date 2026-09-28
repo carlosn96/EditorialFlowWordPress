@@ -5,7 +5,7 @@ deploy_all.py — Despliega en lote todas las entradas ya generadas
 (entradas/<slug>/<slug>.wp.json) al sitio WordPress local via deploy_wp.py.
 
 Uso:
-  py deploy_all.py [--entradas entradas] [--wp ruta/wp.ps1] [--dry-run]
+  py deploy_all.py [--entradas entradas] [--wp ruta/al/ejecutable] [--dry-run]
                    [--author ID] [--author-name login] [--production]
 
 Respeto a volumen: itera cada subfolder y llama al script de despliegue por cada

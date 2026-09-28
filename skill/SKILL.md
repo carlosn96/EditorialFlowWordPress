@@ -1,25 +1,26 @@
 ---
-name: comfil-draft-entradas
+name: editorial-flow
 description: >
-  Pipeline para convertir una carpeta de borradores, notas o recortes en una
-  entrada de WordPress lista para desplegar (WP-compatible). Lee una carpeta
-  indicada, analiza el material, redacta con la skill blog, valida SEO con
+  Pipeline editorial agnostico a la marca y al sitio que convierte una carpeta de
+  borradores, notas o recortes en una entrada de WordPress lista para desplegar.
+  Lee el material, analiza, redacta con la skill blog, valida SEO con
   blog-seo-check, asigna taxonomia con blog-taxonomy, y convierte el borrador en
-  un artefacto JSON/HTML con todos los atributos de la entrada (titulo,
-  extracto, tags, categorias, imagen destacada) listo para autodespliegue. Usa
-  SIEMPRE este skill cuando el usuario quiera pasar notas a un articulo
-  WordPress, diga crear entrada, armar articulo desde una carpeta, pipeline de
-  borradores, publicar en WP desde una carpeta, o hable de generar o desplegar
-  contenido de blog desde materiales existentes, aunque no nombre al skill
-  explicitamente. No uses scrappers: el banco de noticias ya lo resuelve
-  Activepieces.
+  un artefacto JSON/HTML con todos los atributos de la entrada (titulo, extracto,
+  tags, categorias, imagen destacada) listo para autodespliegue en local y
+  produccion. Usa SIEMPRE este skill cuando el usuario quiera pasar notas a un
+  articulo WordPress, diga crear entrada, armar articulo desde una carpeta,
+  pipeline de borradores, publicar en WP desde una carpeta, o hable de generar o
+  desplegar contenido de blog desde materiales existentes, aunque no nombre al
+  skill explicitamente. La marca y el sitio se resuelven por perfil
+  (brands/<slug>/). El banco de noticias / scraper es externo (p. ej. Activepieces
+  u otro).
 ---
 
-# COMFIL · Pipeline de borradores -> entrada WordPress
+# Pipeline editorial de borradores -> entrada WordPress
 
 Pasa de una carpeta con materiales (notas, recortes, borradores) a una **entrada
 de WordPress desplegable**, sin escribir a mano el JSON ni los atributos de WP.
-El scrapper/banco de noticias ya lo aporta Activepieces; este pipeline **empieza
+El banco de noticias/scraper es externo (lo aporta, p. ej., Activepieces u otro); este pipeline **empieza
 cuando los borradores ya estan en una carpeta**.
 
 ## Por que existe este pipeline
@@ -40,7 +41,7 @@ que el despliegue sea un paso deterministico (script, no copiar-pegar).
 **Prohibido estrictamente.** Redacta la idea directa; no uses andamiaje retorico
 vacio. Estas estructuras son la marca de una redaccion generativa barata: restan
 autoridad y hacen que el texto parezca de IA, justo lo contrario del tono
-pastoral y directo que requiere COMFIL. Revisa el borrador y elimina cualquiera de
+pastoral y directo que requiere la marca activa. Revisa el borrador y elimina cualquiera de
 las siguientes antes de convertirlo a entrada.
 
 ### Aperturas vacías
@@ -123,11 +124,10 @@ clave candidatas a tags/categorias. Vuelca el analisis en
 `<carpeta>/informacion/brief.md` (breve) para fundamentar el borrador. **No
 inventes datos**: si algo falta, marca la fuente, no la suplies.
 
-El brief debe incluir un campo obligatorio **"Ángulo COMFIL"**: qué le interesa
-de la nota a la comunidad/estudiantes y a qué lector concreto habla (p. ej. un
-egresado que sirve de caso, una lección para los alumnos, un tema de la
-comunicación eclesial). Ese ángulo —no el tema de la fuente— es el que debe
-gobernar el titular y la estructura del borrador.
+El brief debe incluir un campo obligatorio **"Ángulo de marca"**: qué le interesa
+de la nota a la comunidad/audiencia de la marca y a qué lector concreto habla.
+Ese ángulo —no el tema de la fuente— es el que debe gobernar el titular y la
+estructura del borrador.
 
 ### 2. Redactar con la skill `blog`
 Aplica la skill **`blog`** (ya instalada en `.agents/skills/blog`): escribe el
@@ -135,10 +135,10 @@ articulo en espanol siguiendo sus 6 pilares (claridad con proposito, datos
 reales citados, medios visuales, Q&A opcional, estructura, mantenimiento) y sus
 quality gates. **Si `blog` no esta registrada como invocable en tu entorno,
 lee `.agents/skills/blog/SKILL.md` y aplica su metodologia directamente.**
-**Ajusta la redaccion a la voz de COMFIL** (lee `references/brand-voice.md`
-antes de escribir: registro pastoral/formal, lexico de acogida y encuentro,
-tratamiento exacto de cargos, cierre orientado a la comunidad). El borrador
-resultante se guarda como `<carpeta>/informacion/borrador.md` (Markdown).
+**Ajusta la redaccion a la voz de la marca activa** (lee el `brand-voice.md` del
+perfil de marca — `brands/<slug>/brand-voice.md`, o `references/brand-voice.md`
+como fallback: registro, lexico, tratamiento de cargos, estructura y cierre). El
+borrador resultante se guarda como `<carpeta>/informacion/borrador.md` (Markdown).
 **Cero tolerancia a datos fabricados:** no uses cifras (p. ej. "6.000
 voluntarios") que no esten en las fuentes de la carpeta; marca la fuente.
 
@@ -172,9 +172,10 @@ elementos antes de pasar al paso 3. No se inventa nada: usa solo lo que esta en
   seccion correspondiente del cuerpo, indicandolo con su origen. `build_wp_entry.py`
   tambien convierte automaticamente a iframe cualquier URL de **YouTube
   aislada en su propia linea** del borrador (ver paso 5).
-- **Enlaces internos COMFIL**: enlaza de 3 a 5 entradas publicadas del propio
-  sitio (*comfil-local.local/...* en local, se mantienen al desplegar) cuando
-  haya conexion tematica, para reforzar el tema y el SEO interno.
+- **Enlaces internos del sitio**: enlaza de 3 a 5 entradas publicadas del propio
+  sitio cuando haya conexion tematica, para reforzar el tema y el SEO interno. Los
+  dominios internos se resuelven por marca (`brands/<slug>/site.json` →
+  `internal_domains`) y se normalizan a rutas relativas.
 - **Enlaces externos siameses**: los datos clave (cifras, verificaciones,
   nombres propios) se citan con su fuente enlazada inline con
   `[texto](https://...url...)`.
@@ -202,9 +203,9 @@ avances hasta tener todas las casillas marcadas.
 - [ ] Sin metaforas/cliches desgastados ("piedra angular", "punta del iceberg", "abraza lo X", verbos inflados: transformar/impulsar/potenciar de relleno)
 - [ ] Sin gancho de engagement barato ("Imagina que...", "¿Te has preguntado alguna vez...?", "Sigue leyendo para descubrir...")
 - [ ] Sin cierres de manual ("En conclusion...", "¡Asi que ya sabes!" con exclamaciones/emoji, "El futuro de X...")
-- [ ] Voz COMFIL: registro pastoral/formal, cargos con tratamiento correcto, cierre orientado a la comunidad, sin invenciones de citas
-- [ ] Variación de referencias a COMFIL: la sigla no se repite en menciones seguidas; se alterna con "Instituto de Comunicación y Filosofía", "la escuela", "la casa de estudios", "nuestra comunidad"
-- [ ] Ángulo propio: la nota tiene un ángulo que interesa a la comunidad COMFIL y no replica el orden ni el relato de la fuente primaria (no es una paráfrasis)
+- [ ] Voz de marca: registro y tono segun `brands/<slug>/brand-voice.md`, cargos/terminos con tratamiento correcto, cierre orientado a la comunidad, sin invenciones de citas
+- [ ] Variación de referencias a la marca: la sigla no se repite en menciones seguidas; se alterna con el nombre completo y variantes del perfil (`brands/<slug>/brand.json`)
+- [ ] Ángulo propio: la nota tiene un ángulo que interesa a la comunidad de la marca y no replica el orden ni el relato de la fuente primaria (no es una paráfrasis)
 - [ ] Sin registro laudatorio/heroico: las personas se tratan como casos o ejemplos, no como modelos a imitar ni con adjetivación elogiosa
 - [ ] Cifras con matiz exacto (seguidores vs. participantes) y fecha de verificación; discrepancias entre fuentes señaladas con ambas citas
 - [ ] Cero inferencia: cada dato, cita, cifra y nombre tiene fuente verificable citada inline; no hay afirmaciones sin respaldo ni contexto inventado
@@ -220,7 +221,7 @@ Corrige hasta pasar la lista. Anota el `seo_title` y `seo_description` finales.
 Notas de entorno (no bloquean el borrador):
 - En un borrador aislado no existen URLs del sitio: marca los **enlaces
   internos** como WARN y difierelos hasta desplegar (luego enlaza 3+ entradas
-  COMFIL).
+  del propio sitio).
 - `build_wp_entry.py` ya genera el **JSON-LD Article** y `deploy_wp.py` fija
   **OG/Twitter/yoast**, asi que esos puntos del checklist quedan cubiertos por
   el script, no a mano.
@@ -236,10 +237,10 @@ configuradas, omite el sync y deja los tags en el JSON para que los fije
 `deploy_wp.py`.
 
 ### 5. Convertir a artefacto WP
-**Una entrada:** ejecuta desde la raiz del proyecto (`comfil-local`):
+**Una entrada:** ejecuta desde la raiz del proyecto:
 
 ```powershell
-py .agents/skills/comfil-draft-entradas/scripts/build_wp_entry.py `
+py scripts/build_wp_entry.py `
   --draft <carpeta>/informacion/borrador.md `
   --title "Titulo final" --slug "mi-entrada" `
   --excerpt "Resumen SEO (meta description)" `
@@ -256,7 +257,7 @@ trabajo (`workspace/draft-entradas/borradores` y
 `workspace/draft-entradas/generados`), asi que basta ejecutarlo:
 
 ```powershell
-py .agents/skills/comfil-draft-entradas/scripts/build_all.py
+py scripts/build_all.py
 ```
 
 Cada entrada se escribe en **`workspace/draft-entradas/generados/<slug>/`**
@@ -277,7 +278,7 @@ bloques) y `<slug>.schema.json` (JSON-LD de referencia).
   linea** del borrador se convierte automaticamente en `<iframe>` embebido.
 - **Auto-referencias**: si el borrador no cierra con una seccion "Referencias
   consultadas", se **genera al final** con las URLs externas ya presentes en el
-  texto (excluye enlaces internos COMFIL y el embed de YouTube ya insertado).
+  texto (excluye enlaces internos del sitio y el embed de YouTube ya insertado).
 
 Así, aunque el borrador no incluya el enriquecimiento escrito a mano, el
 `.wp.json` siempre sale con referencias y el video embebido cuando los hay.
@@ -299,25 +300,26 @@ bloques (crea bloques nativos). `deploy_wp.py` usa ese marcado.
 ### 6. Autodespliegue
 **Una entrada:**
 ```powershell
-py .agents/skills/comfil-draft-entradas/scripts/deploy_wp.py `
+py scripts/deploy_wp.py `
   --json workspace/draft-entradas/generados/<slug>/<slug>.wp.json `
-  --author-name COMFIL   # opcional: asigna autor (schema Author de Yoast)
+  --author-name <login-del-autor>   # opcional: asigna autor (schema Author de Yoast)
 ```
 
 **n entradas (lote):** `deploy_all.py` itera `workspace/draft-entradas/generados/<slug>/.wp.json`
 (su default ya apunta ahi); propaga el autor a todas:
 ```powershell
-py .agents/skills/comfil-draft-entradas/scripts/deploy_all.py `
-  --author-name COMFIL [--dry-run]
+py scripts/deploy_all.py `
+  --author-name <login-del-autor> [--dry-run]
 ```
 
 Crea el post (borrador por defecto), asigna categorias/tags, e importa y fija la
 imagen destacada. `--dry-run` muestra el script sin ejecutarlo. El script
-resuelve la raiz del proyecto y `wp.ps1` desde su propia ubicacion.
+resuelve la raiz del proyecto y el comando WP-CLI local
+(`WP_CLI_COMMAND`, o `wp.ps1` en la raiz).
 
 Comportamiento de `deploy_wp.py` (corregido tras pruebas):
-- **Pre-check de BD:** antes de crear, verifica la conexion; si el sitio Local
-  (comfil-local) no esta arrancado, aborta con mensaje claro y `exit 1` (no
+- **Pre-check de BD:** antes de crear, verifica la conexion; si el sitio local
+  no esta arrancado, aborta con mensaje claro y `exit 1` (no
   crashea con error de NULL).
 - **Meta SEO (Yoast):** tras crear, fija automaticamente titulo, meta
   description, focus keyword, breadcrumb, cornerstone, schema article type y
@@ -328,7 +330,7 @@ Comportamiento de `deploy_wp.py` (corregido tras pruebas):
   resuelve a ID); si no, se crea con el autor por defecto.
 - **Imagen destacada:** si no se importa, el post se crea igual (no fatal).
 
-> El JSON es el contrato de autodespliegue: cualquier sistema (Activepieces,
+> El JSON es el contrato de autodespliegue: cualquier sistema (orquestador,
 > CRON, CI) puede leer `entradas/*.wp.json` y llamar a `deploy_wp.py`.
 
 ### 6b. Campos Yoast SEO en `meta.json` (opcionales)
@@ -367,13 +369,12 @@ Ejemplo:
 `<slug>.wp.json`, y `deploy_wp.py` los escribe como meta de Yoast al crear el
 post. Asi, cada entrada sale con SEO completo (no solo OG/Twitter) sin tocar el
 editor. Para el **autor** (schema `Author`), pasa `--author-name <login>` en el
-despliegue; se recomienda `COMFIL`.
+despliegue; usa el login del autor del perfil de marca.
 
 ### 6c. Despliegue a PRODUCCION (vía SSH con paramiko + WP-CLI remoto)
 Para publicar en el sitio de producción se usa **`deploy_prod_ssh.py`**, que
-conecta por SSH al hosting (SiteGround: `ssh.comfil.edu.mx`, ver
-`workspace/remote/ssh.txt` y `ssh_lectura_solo.py`) con **paramiko** y ejecuta el
-wp-cli del servidor (`cd <WP_ROOT> && wp --url=<URL> …`). Como producción tiene
+conecta por SSH al hosting (credenciales en el `.env` y `workspace/remote/ssh.txt`)
+con **paramiko** y ejecuta el wp-cli del servidor (`cd <WP_ROOT> && wp --url=<URL> …`). Como producción tiene
 el plugin Yoast instalado, se aplican **todos** los metas de SEO, sin depender de
 la REST API ni de mu-plugins.
 
@@ -382,11 +383,11 @@ autodespliegue); no se reescribe.
 
 ```powershell
 # Una entrada (crea en produccion con status WP_PROD_STATUS, por defecto draft)
-py .agents/skills/comfil-draft-entradas/scripts/deploy_prod_ssh.py `
+py scripts/deploy_prod_ssh.py `
   --json workspace/draft-entradas/generados/<slug>/<slug>.wp.json [--dry-run]
 
 # Lote (--production -> deploy_prod_ssh.py por cada entrada)
-py .agents/skills/comfil-draft-entradas/scripts/deploy_all.py --production [--dry-run]
+py scripts/deploy_all.py --production [--dry-run]
 ```
 
 Variables que lee del `.env` de la raiz (NO hardcodeadas):
@@ -395,24 +396,22 @@ Variables que lee del `.env` de la raiz (NO hardcodeadas):
 - `WP_PROD_WP_ROOT` — raíz de WordPress en el servidor (`…/public_html`).
 - `WP_PROD_URL` — URL pública de producción.
 - `WP_PROD_WP` — binario de WP-CLI en el servidor (default `wp`, ya en PATH: `/usr/local/bin/wp`, WP-CLI 2.12).
-- `WP_AUTHOR_ID` — ID del autor en producción (en prod el login es `COMFIL` = ID 1, distinto de Local; se lee del .env).
+- `WP_AUTHOR_ID` — ID del autor en producción (puede diferir de local; se lee del .env).
 - `WP_PROD_STATUS` — estado por defecto (`draft` | `publish`; se recomienda `draft` para revisión previa).
 
 Notas del modo producción:
 - **Pre-check:** `wp core version` remoto antes de crear; si el SSH/credenciales fallan, aborta con mensaje claro.
 - Aplica categorías, tags (crea las que falten), imagen destacada (solo si es **URL pública**) y el bloque **`yoast`** completo igual que en Local (verificado en prod: `_yoast_wpseo_title`, `_metadesc`, `_focuskw`, `_bctitle`, `_is_cornerstone`, `_schema_article_type`, OG/Twitter, canonical).
-- Es **crear nuevo** (no actualiza por slug): para re-desplegar, borra el borrador en producción primero.
+- Es **crear nuevo** por defecto; para actualizar sin duplicar usa `--update` (resuelve el post por slug), o borra el borrador en producción antes de re-desplegar.
 - Las credenciales SSH viven en `workspace/remote/ssh.txt` (ignorado por git). No se comprometen.
 
 ## Notas
-- No uses scrappers: el banco de noticias ya lo aporta Activepieces.
-- El sitio destino es WordPress local (Local by Flywheel). El wrapper `wp.ps1`
-  de la raiz ya resuelve PHP/BD; no pases `--path`/`--url`.
+- El banco de noticias/scraper es **externo** (p. ej. Activepieces u otro): este pipeline empieza cuando el material ya esta en una carpeta.
+- El sitio destino puede ser un WordPress local (p. ej. Local by Flywheel) accesible por un wrapper (`wp.ps1`) o por `wp` en PATH; define `WP_CLI_COMMAND` si no se llama `wp.ps1`. No pases `--path`/`--url` si el wrapper ya resuelve el sitio.
 - Si falta `blog`, `blog-seo-check` o `blog-taxonomy`, instalarlas con
   `find-skills` (o clonar desde el registry) antes de continuar.
-- El despliegue requiere que el sitio Local este iniciado; si falla con
-  "Error establishing a database connection", arranca comfil-local en Local y
-  reintenta.
+- El despliegue local requiere que el sitio este iniciado; si falla con
+  "Error establishing a database connection", arranca el sitio local y reintenta.
 
 ## Aprendizajes operativos (agnósticos al tema)
 Reglas de ejecución y calidad detectadas en el uso real. No dependen del tema de la entrada.
@@ -428,7 +427,7 @@ Reglas de ejecución y calidad detectadas en el uso real. No dependen del tema d
 - Editar contenido en remoto requiere subir el HTML a un temporal y `--post_content="$(cat archivo)"`.
 
 ### Verificación
-- En PowerShell, la salida de `wp.ps1` llega como **array de líneas**: únela con `-join` antes de buscar substrings (`Contains`/`Length` dan falsos negativos).
+- En PowerShell, la salida del wrapper de WP-CLI (p. ej. `wp.ps1`) llega como **array de líneas**: únela con `-join` antes de buscar substrings (`Contains`/`Length` dan falsos negativos).
 - Antes de desplegar, **valida que los enlaces internos existan** en el entorno destino (posts publicados).
 - La puntuación de Yoast se **recalcula al abrir/guardar** el post en el editor; el `_yoast_wpseo_linkdex` guardado puede estar desactualizado.
 

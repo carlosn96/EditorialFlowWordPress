@@ -5,9 +5,9 @@ deploy_prod_ssh.py — Autodespliegue de una entrada WordPress a PRODUCCION
 (vía SSH con paramiko + WP-CLI remoto).
 
 A diferencia de deploy_wp.py (que apunta al sitio Local), este script conecta
-por SSH al hosting (SiteGround, ver workspace/remote/ssh.txt) y ejecuta el
-wp-cli del servidor con `cd <WP_ROOT> && wp --url=<URL> …`. Así se aplican
-TODOS los metas de Yoast, sin depender de la REST API ni de mu-plugins.
+por SSH al hosting y ejecuta el wp-cli del servidor con `cd <WP_ROOT> && wp
+--url=<URL> …`. Así se aplican TODOS los metas de Yoast, sin depender de la
+REST API ni de mu-plugins.
 
 Uso:
   py deploy_prod_ssh.py --json workspace/draft-entradas/generados/<slug>/<slug>.wp.json
@@ -45,9 +45,13 @@ sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="repla
 
 import paramiko
 
-# El skill vive en <proyecto>/.agents/skills/comfil-draft-entradas/scripts/
+# La raiz del proyecto se detecta subiendo desde este script hasta encontrar las
+# señales del proyecto (wp.ps1, .env o app/public/wp-config.php).
 HERE = os.path.dirname(os.path.abspath(__file__))
-ROOT = os.path.abspath(os.path.join(HERE, "..", "..", "..", ".."))
+sys.path.insert(0, HERE)
+import config as pipeline_config  # noqa: E402
+
+ROOT = pipeline_config.find_project_root(HERE)
 
 
 def load_env(path: str) -> dict:

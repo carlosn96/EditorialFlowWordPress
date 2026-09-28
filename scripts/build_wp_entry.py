@@ -32,6 +32,14 @@ import re
 import sys
 import unicodedata
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import config as pipeline_config  # noqa: E402
+
+
+# Dominios internos del sitio activo (se rellenan desde el perfil de marca).
+# Las URLs de estos dominios se normalizan a rutas relativas.
+_INTERNAL_DOMAINS: list[str] = []
+
 
 # --------------------------------------------------------------------------- #
 # Markdown -> HTML (compatible WordPress / Gutenberg)
@@ -45,13 +53,15 @@ def _slugify(text: str) -> str:
 
 
 def _href_normalizado(url: str) -> str:
-    """Convierte las URLs internas de COMFIL (Local o produccion) en rutas
-    relativas (/ruta/), y deja el resto igual. Asi los enlaces internos del
-    sitio funcionan en cualquier entorno (local y produccion)."""
+    """Convierte las URLs de los dominios internos del sitio activo en rutas
+    relativas (/ruta/), y deja el resto igual. Los dominios se resuelven desde el
+    perfil de marca (brands/<slug>/site.json); asi los enlaces internos funcionan
+    en cualquier entorno (local y produccion)."""
     u = url.rstrip(".,;:!?")
-    m = re.match(r"^https?://(?:comfil-local\.local|comfil\.edu\.mx)(/.*)$", u)
-    if m:
-        return m.group(1) or "/"
+    for dom in _INTERNAL_DOMAINS:
+        m = re.match(r"^https?://" + re.escape(dom) + r"(/.*)$", u)
+        if m:
+            return m.group(1) or "/"
     return u
 
 
@@ -286,13 +296,13 @@ def to_gutenberg(html: str) -> str:
 # Auto-enriquecimiento: referencias consultadas
 # --------------------------------------------------------------------------- #
 def _auto_referencias(md: str) -> list[str]:
-    """Extrae las URLs externas (no internas COMFIL) que aparecen en el borrador
+    """Extrae las URLs externas (no de los dominios internos del sitio) que aparecen en el borrador
     y devuelve una lista de strings markdown 'fuente': url para una seccion de
     referencias. No inventa nada: usa exactamente las URLs ya presentes."""
     urls: list[str] = []
     for m in re.finditer(r"https?://[^\s\)\]\"']+", md):
         u = m.group(0).rstrip(".,;:!?")
-        if "comfil-local.local" in u or "comfil.edu.mx" in u:
+        if any(dom in u for dom in _INTERNAL_DOMAINS):
             continue
         if "youtube" in u and ("/embed/" in u):
             # el embed ya se inserta como iframe; no se repite como referencia
@@ -339,14 +349,23 @@ def main() -> int:
     ap.add_argument("--twitter-description", default=None)
     ap.add_argument("--canonical", default=None,
                     help="URL canonica (vacio: WP usa la propia)")
-    ap.add_argument("--author", default="COMFIL",
-                    help="Nombre del autor/organizacion para el schema Article")
+    ap.add_argument("--author", default=None,
+                    help="Nombre del autor/organizacion para el schema Article (por defecto: perfil de marca)")
+    ap.add_argument("--brand", default=None,
+                    help="Slug del perfil de marca (brands/<slug>/); por defecto EDITORIALFLOW_BRAND o el default")
     ap.add_argument("--extras", action="store_true",
                     help="Ademas de .wp.json y .html, genera .gutenberg.html y .schema.json")
     args = ap.parse_args()
 
     if not os.path.isfile(args.draft):
         sys.exit(f"No existe el borrador: {args.draft}")
+
+    # Resolver marca/sitio (agnostico): dominios internos y autor por defecto.
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    cfg = pipeline_config.load_config(script_dir, args.brand)
+    global _INTERNAL_DOMAINS
+    _INTERNAL_DOMAINS = list(cfg.get("internal_domains") or [])
+    author = args.author if args.author is not None else (cfg.get("author") or "")
 
     # utf-8-sig QUITA el BOM del archivo fuente; si no, el \ufeff se propaga
     # al post_content y queda guardado en la BD.
@@ -427,8 +446,8 @@ def main() -> int:
             "image": args.featured_image or None,
             "datePublished": datetime.date.today().isoformat(),
             "dateModified": datetime.date.today().isoformat(),
-            "author": {"@type": "Organization", "name": args.author},
-            "publisher": {"@type": "Organization", "name": args.author},
+            "author": {"@type": "Organization", "name": author},
+            "publisher": {"@type": "Organization", "name": author},
             "mainEntityOfPage": {"@type": "WebPage", "@id": ""},
         },
     }

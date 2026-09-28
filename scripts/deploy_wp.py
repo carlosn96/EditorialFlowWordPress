@@ -6,7 +6,7 @@ generado por build_wp_entry.py.
 
 Uso:
   py deploy_wp.py --json entradas/<slug>.wp.json [--wp ruta/wp.ps1] [--dry-run]
-                    [--author 1] [--author-name "COMFIL"]
+                    [--author 1] [--author-name "<login>"]
                     [--production]
 
 Qué hace:
@@ -28,8 +28,9 @@ Qué hace:
   (paramiko + wp-cli remoto por SSH al hosting), que aplica TODOS los metas de
   Yoast porque el servidor tiene el plugin instalado, sin depender de la REST API.
 
-Requiere que el sitio Local (comfil-local) esté iniciado y que wp.ps1 funcione
-(modo local), o acceso SSH a producción (modo --production).
+Requiere que el sitio WordPress local esté iniciado y que el comando WP-CLI
+(wrapper `wp.ps1` o `wp` en PATH; o `WP_CLI_COMMAND`) funcione (modo local), o
+acceso SSH a producción (modo --production).
 """
 from __future__ import annotations
 
@@ -40,11 +41,15 @@ import subprocess
 import sys
 import tempfile
 
-# El skill vive en <proyecto>/.agents/skills/comfil-draft-entradas/scripts/
-# Subimos 4 niveles para llegar a la raiz del proyecto (donde esta wp.ps1).
+# La raiz del proyecto se detecta subiendo desde este script hasta encontrar las
+# señales del proyecto (wp.ps1, .env o app/public/wp-config.php). El comando de
+# WP-CLI local se puede fijar con la variable de entorno WP_CLI_COMMAND.
 HERE = os.path.dirname(os.path.abspath(__file__))
-ROOT = os.path.abspath(os.path.join(HERE, "..", "..", "..", ".."))
-DEFAULT_WP = os.path.join(ROOT, "wp.ps1")
+sys.path.insert(0, HERE)
+import config as pipeline_config  # noqa: E402
+
+ROOT = pipeline_config.find_project_root(HERE)
+DEFAULT_WP = os.environ.get("WP_CLI_COMMAND") or os.path.join(ROOT, "wp.ps1")
 
 
 def trim_metadesc(text: str, limit: int = 156) -> str:
@@ -95,7 +100,7 @@ def build_ps1(payload: dict, content_file: str, wp: str,
     # Pre-check de conectividad: si la BD no responde, aborta con mensaje claro
     lines.append('& $wp db check | Out-Null')
     lines.append('if ($LASTEXITCODE -ne 0) {')
-    lines.append('  Write-Error "No se puede conectar a la BD de WordPress. Arranca el sitio Local (comfil-local) y reintenta."')
+    lines.append('  Write-Error "No se puede conectar a la BD de WordPress. Arranca el sitio local y reintenta."')
     lines.append('  exit 1')
     lines.append('}')
     lines.append(f'$status = "{status}"')

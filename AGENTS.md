@@ -14,12 +14,14 @@ por `meta.json` (por entrada) y `.env` (por entorno).
 - No versiones secretos (`.env`, `ssh.txt`) ni salidas de `workspace/`.
 - Mantén el código **agnóstico**: sin temas, categorías ni etiquetas hardcodeadas.
 - Cambios en `scripts/` o `skill/` deben **sincronizarse** a
-  `<proyecto>/.agents/skills/comfil-draft-entradas/` para que el pipeline los use.
+  `<proyecto>/.agents/skills/<skill>/` para que el pipeline los use.
 
 ## Mapa de archivos
 
 - `skill/SKILL.md` — el pipeline completo (pasos, reglas editoriales, checklist).
-- `references/brand-voice.md` — voz de marca y pautas.
+- `scripts/config.py` — resolución de marca/sitio (perfil activo).
+- `brands/<slug>/` — perfil de marca (`brand.json`, `site.json`, `brand-voice.md`).
+- `references/brand-voice.md` — plantilla de voz (fallback).
 - `scripts/build_wp_entry.py` — borrador → artefacto.
 - `scripts/deploy_wp.py` / `scripts/deploy_prod_ssh.py` — despliegue local / producción.
 - `scripts/build_all.py` / `scripts/deploy_all.py` — lotes.
