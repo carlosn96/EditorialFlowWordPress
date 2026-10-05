@@ -6,6 +6,7 @@ Todos los cambios relevantes de EditorialFlow. Formato basado en
 ## [Unreleased]
 
 ### Añadido
+- Compuerta de evaluacion de redaccion (`references/eval-redaccion.md`, PASS/FAIL) y nuevos patrones de IA a eliminar + lista de palabras/frases + principios de edicion, inspirados en `petergyang/no-ai-slop`.
 - Estructura inicial: `skill/SKILL.md`, `scripts/` (build y deploy), `references/brand-voice.md`.
 - `deploy_prod_ssh.py`: modo `--update` (actualizar por slug sin duplicar).
 - `deploy_wp.py` y `deploy_prod_ssh.py`: fijan `_yoast_wpseo_primary_category`.

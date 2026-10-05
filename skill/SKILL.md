@@ -79,6 +79,40 @@ las siguientes antes de convertirlo a entrada.
 - "¡Así que ya sabes!" / "¡Así que ya lo sabes!" o cualquier cierre con exclamaciones o emoji
 - "El futuro de X..." o "El tiempo lo dirá" como remate genérico
 
+### Más patrones generativos a eliminar (estilo no-ai-slop)
+- **Aperturas de relleno (throat-clearing):** "Lo importante es...", "Seamos claros", "Para ser honesto", "La incómoda verdad es...". Di el punto y ya.
+- **Preparativos de falso insight:** "Lo que nadie te dice...", "Esto es lo que casi todos pasan por alto...", "Lo que la mayoría hace mal...". Elimina el preparativo; la afirmación debe sostenerse sola.
+- **Revelación con dos puntos (colon reveals):** "Lo mejor: aprende solo." Reescríbelo como oración llana. Los dos puntos son para listas, etiquetas y citas, no para drama.
+- **Análisis superficial con gerundio:** cláusulas finales en "-ando/-iendo" que fingen explicar ("destacando", "reflejando", "demostrando", "evidenciando"). Reemplázalas por el efecto concreto.
+- **Pomposidad de importancia:** "marca un momento clave", "es un testimonio de", "juega un papel vital", "consolida su posición", "subraya su relevancia". Di el hecho; que el lector juzgue.
+- **Metadiscurso interpretativo:** "Esto último importa más de lo que parece", "El punto clave es", "Como puedes ver", "En otras palabras". Si el punto está claro, bórralo.
+- **Atribución vaga (weasel):** "los expertos coinciden", "los estudios muestran", "muchos argumentan", "es ampliamente reconocido". Nombra la fuente o elimina la afirmación. Nunca inventes fuente (enlaza con "cero inferencia").
+- **Verbos débiles falsos:** "funciona como un centro centralizado para..." → "rastrea X, Y y Z en un lugar". Prefiere "es"/"tiene" cuando son más claros.
+- **Ciclado de sinónimos:** si la palabra correcta es clara, repítela; no la rotes para "estilo" ("el agente... la herramienta... el asistente...").
+- **Enumeración negativa:** "No es un X. No es un Y. Es un Z." → di Z.
+- **Fragmentación dramática:** "X. Y Y. Y Z." o "Eso es todo. Eso es todo el punto." Usa oraciones completas.
+- **Ritmo robótico:** evita formas de oración repetidas, párrafos idénticos y fragmentos punzantes apilados.
+- **Preparativos retóricos:** "¿Y si te dijera...?", "Piénsalo:", "Plot twist:", "Pregunta? Respuesta." Elimínalos.
+- **Remate pseudo-profundo (kicker):** borra la última línea "profunda" si convierte el punto en metáfora o mic drop. No la reescribas con mejor metáfora: **bórrala** y termina en la oración concreta más clara.
+- **Cierres de resumen:** "En conclusión", "En definitiva", "En general" o un párrafo final que repite lo dicho. Termina en el último punto concreto, la conclusión práctica o el siguiente paso.
+- **Formato decorativo (formatting slop):** emojis en encabezados, negritas a media frase, listas donde dos oraciones de prosa leerían mejor, encabezados sobre secciones de dos frases.
+- **Guion largo (—):** no como muletilla de ritmo. En textos cortos, ninguno; en largos, 1–2 si superan claramente a coma/paréntesis.
+
+## Palabras y frases a eliminar (slop)
+- **Anglismos inflados** (evítalos o tradúcelos): delve, foster, leverage, utilize, facilitate, empower, streamline, robust, cutting-edge, paradigm shift, game changer, tapestry, realm, beacon, multifaceted, meticulous, intricate, paramount, transformative, elevate, embark, supercharge, harness, ever-evolving.
+- **Adverbios casi vacíos:** just, literally, honestly, simply, actually, truly, fundamentally, importantly, crucially, inherently, inevitably. (Córtalos si no aportan; consérvalos si marcan énfasis, duda o ritmo.)
+- **Frases casi vacías:** "vale la pena señalar", "es importante notar", "al final del día", "cuando se trata de", "en esencia", "en el mundo actual", "en la era de", "la realidad es que", "la verdad es que", "en términos de", "con respecto a", "para poder", "de cara al futuro", "en este artículo", "vamos a profundizar".
+
+## Principios de edición (voz y claridad)
+- **Preserva la voz real** (de la marca): vocabulario, cadencia, contundencia, humor, duda, digresiones. No vuelvas todo igual de "pulido".
+- **Edición mínima efectiva:** corrige patrones de IA, errores y repeticiones; deja las frases fuertes en paz.
+- **Lidera con el punto** cuando el preámbulo no aporta; conserva anécdotas o personalidad que crean contexto o tensión.
+- **Voz activa:** que los verbos hagan el trabajo ("tomó una decisión" → "decidió"; "tiene la capacidad de" → "puede").
+- **Concreto sobre abstracto:** nombres, cifras, fechas, mecanismos y ejemplos. Protege el dato específico; no lo difumines en importancia genérica.
+- **Muestra, no digas** al lector lo que debe pensar.
+- **Test de portabilidad:** si una frase podría moverse sin cambios a otra persona, empresa o país, es relleno: córtala o hazla específica.
+- **"Abre" sin simplificar:** mantén la sustancia y la precisión; quita solo lo que estorba.
+
 ## Workflow
 
 ### 0. Areas de trabajo (raiz = `workspace`) y volumen n-esimo
@@ -215,6 +249,10 @@ avances hasta tener todas las casillas marcadas.
 - [ ] Sin registro laudatorio/heroico: las personas se tratan como casos o ejemplos, no como modelos a imitar ni con adjetivación elogiosa
 - [ ] Cifras con matiz exacto (seguidores vs. participantes) y fecha de verificación; discrepancias entre fuentes señaladas con ambas citas
 - [ ] Cero inferencia: cada dato, cita, cifra y nombre tiene fuente verificable citada inline; no hay afirmaciones sin respaldo ni contexto inventado
+- [ ] Sin atribucion vaga ("los expertos coinciden", "los estudios muestran") sin fuente nombrada
+- [ ] Test de portabilidad: ninguna frase generica reciclable; los datos especificos estan protegidos
+- [ ] Voz activa y concreta; sin pomposidad de importancia, gerundios de analisis ni revelaciones con dos puntos
+- [ ] Pasa la **compuerta de evaluacion** (`references/eval-redaccion.md`): todas las casillas en PASS
 
 ### 3. Validar SEO con `blog-seo-check`
 Aplica la skill **`blog-seo-check`** (`.agents/skills/blog-seo-check`) sobre

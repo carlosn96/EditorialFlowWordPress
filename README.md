@@ -35,6 +35,7 @@ EditorialFlow/
 │   ├── site.json             #   internal_domains, author, schema por defecto
 │   └── brand-voice.md        #   voz/tono de la marca
 ├── references/brand-voice.md # plantilla de voz (fallback)
+├── references/eval-redaccion.md # compuerta de evaluacion (PASS/FAIL) inspirada en no-ai-slop
 ├── INSTALL.md  RUNBOOK.md  AGENTS.md  CHANGELOG.md
 ├── .env.example              # variables de produccion (plantilla)
 └── .gitignore
